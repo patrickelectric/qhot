@@ -1,0 +1,58 @@
+sudo: false
+language: cpp
+
+branches:
+  only:
+  - master
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      sudo: require
+      addons:
+        apt:
+          sources:
+            # Add ppa for gcc-7
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
+            # Set ppa to get a modern version of qt
+            - sourceline: 'ppa:beineri/opt-qt-5.12.1-xenial'
+          packages:
+            - g++-7
+            - git
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+    - os: osx
+      osx_image: xcode10.1
+      compiler: clang
+      env:
+        - MATRIX_EVAL="COMPILER=clang++"
+
+install:
+- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+    export QTV=qt512;
+    sudo apt update -qq;
+    echo "Install qt libraries";
+    sudo apt install build-essential ${QTV}base
+    ${QTV}quickcontrols ${QTV}quickcontrols2
+    ${QTV}graphicaleffects ${QTV}svg ${QTV}scxml libgl1-mesa-dev;
+  fi
+- if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+    echo "Download last version of Qt with brew";
+    brew update > /dev/null;
+    brew install qt5;
+    chmod -R 755 /usr/local/opt/qt5/*;
+    export QTDIR="/usr/local/opt/qt5";
+    export PATH="$QTDIR/bin:$PATH";
+  fi
+
+script:
+- eval "${MATRIX_EVAL}"
+- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+    source /opt/qt*/bin/qt*-env.sh;
+  fi
+- echo "Build project";
+- mkdir build && cd build;
+- qmake ..;
+- make;
