@@ -54,14 +54,6 @@ public:
     }
     Q_PROPERTY(QUrl filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
 
-    /**
-     * @brief Return hot reload component
-     *
-     * @param parent
-     * @return QQmlComponent*
-     */
-    Q_INVOKABLE QQmlComponent* component(QObject *parent);
-
 signals:
     void filePathChanged();
 

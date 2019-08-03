@@ -21,7 +21,6 @@ ApplicationWindow {
 
     Connections {
         target: ProvidesSomething
-        property var component: null
         onFilePathChanged: {
             var path = ProvidesSomething.filePath + "?t=" + Date.now()
             loader.source = path

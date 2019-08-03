@@ -12,17 +12,6 @@ ProvidesSomething::ProvidesSomething()
     });
 }
 
-QQmlComponent* ProvidesSomething::component(QObject *parent)
-{
-    QQmlEngine *engine = qmlEngine(parent);
-    if(!engine) {
-        qDebug() << "No qml engine to load visualization.";
-        return nullptr;
-    }
-    QQmlComponent *component = new QQmlComponent(engine, _url);
-    return component;
-}
-
 QObject* ProvidesSomething::qmlSingletonRegister(QQmlEngine* engine, QJSEngine* scriptEngine)
 {
     Q_UNUSED(scriptEngine)
