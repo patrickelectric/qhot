@@ -54,6 +54,13 @@ public:
     }
     Q_PROPERTY(QUrl filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
 
+    /**
+     * @brief Set the qml engine
+     *
+     * @param engine
+     */
+    void setEngine(QQmlEngine* engine);
+
 signals:
     void filePathChanged();
 
@@ -74,4 +81,5 @@ private:
 
     QFileSystemWatcher _fileSystemWatcher;
     QUrl _url;
+    QQmlEngine* m_engine;
 };

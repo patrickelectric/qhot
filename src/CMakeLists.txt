@@ -3,6 +3,7 @@ set(CMAKE_AUTOMOC ON)
 set(SRCS
     main.cpp
     providessomething.cpp
+    urlinterceptor.cpp
 )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
