@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.3
+import QtQuick.Layouts 1.13
 
 import ProvidesSomething 1.0
 
@@ -29,7 +30,10 @@ ApplicationWindow {
 
     Loader {
         id: loader
-        anchors.fill: parent
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: pathLayout.bottom
         property var recoverSource: "qrc:/recover.qml"
         source: recoverSource
 
@@ -40,6 +44,28 @@ ApplicationWindow {
             } else if(loader.status === Loader.Null) {
                 loader.source = recoverSource
                 loader.item.state = "null"
+            }
+        }
+    }
+
+    RowLayout {
+        id: pathLayout
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        TextEdit {
+            id: pathEdit
+            Layout.fillWidth: true
+            text: "POTATO"
+            onEditingFinished: {
+                ProvidesSomething.filePath = text
+            }
+        }
+        Button {
+            id: pathEditButton
+            text: "ok!"
+            onClicked: {
+                ProvidesSomething.filePath = pathEdit.text
             }
         }
     }
