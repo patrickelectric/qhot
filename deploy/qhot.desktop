@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=qhot
+GenericName=qhot
+Comment=qhot Comment
+Icon=icon
+Exec=qhot
+Terminal=false
+Categories=Utility;
+Keywords=computer;
