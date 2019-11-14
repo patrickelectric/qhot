@@ -6,7 +6,13 @@
 Live preview of your qml modifications !
 It works with nested qml components !
 
+## Downloads :package:
+
+- :computer: [Windows](https://github.com/patrickelectric/qhot/releases/download/continuous/qhot_release.zip)
+- :apple: [MacOS](https://github.com/patrickelectric/qhot/releases/download/continuous/qhot.dmg)
+- :penguin: [Linux](https://github.com/patrickelectric/qhot/releases/download/continuous/qhot.AppImage)
+
 #### How to use
-`./qhot myFile.qml`
+`./qhot.exe myFile.qml` or `./qhot.dmg myFile.qml` or `./qhot.AppImage myFile.qml`
 
 ![](/doc/example.gif)
