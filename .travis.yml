@@ -5,6 +5,10 @@ branches:
   only:
   - master
 
+env:
+  global:
+    - BIN=qhot
+
 matrix:
   include:
     - os: linux
@@ -16,43 +20,80 @@ matrix:
             # Add ppa for gcc-7
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
             # Set ppa to get a modern version of qt
-            - sourceline: 'ppa:beineri/opt-qt-5.12.1-xenial'
+            - sourceline: 'ppa:beineri/opt-qt-5.12.3-xenial'
           packages:
             - g++-7
             - git
       env:
+        - APPIMAGE="true"
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
     - os: osx
       osx_image: xcode10.1
       compiler: clang
       env:
+        - DMG="true"
         - MATRIX_EVAL="COMPILER=clang++"
 
 install:
-- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+- if [ ! -z "${APPIMAGE}" ]; then
     export QTV=qt512;
     sudo apt update -qq;
     echo "Install qt libraries";
     sudo apt install build-essential ${QTV}base
     ${QTV}quickcontrols ${QTV}quickcontrols2
     ${QTV}graphicaleffects ${QTV}svg ${QTV}scxml libgl1-mesa-dev;
+    export ARTIFACT="$BIN*.AppImage";
   fi
-- if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+- if [ ! -z "${DMG}" ]; then
     echo "Download last version of Qt with brew";
     brew update > /dev/null;
     brew install qt5;
     chmod -R 755 /usr/local/opt/qt5/*;
     export QTDIR="/usr/local/opt/qt5";
     export PATH="$QTDIR/bin:$PATH";
+    export ARTIFACT="$BIN*.dmg";
   fi
 
 script:
+- export GITHUB_TOKEN="${github_token}"
 - eval "${MATRIX_EVAL}"
-- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+- if [ ! -z "${APPIMAGE}" ]; then
+    echo "Load qt env";
     source /opt/qt*/bin/qt*-env.sh;
+    echo "Build project";
+    mkdir build && cd build;
+    qmake ..;
+    make;
+    echo "Create deploy folder";
+    mkdir deploy;
+    cp ../deploy/icon.png deploy/;
+    cp ../deploy/$BIN.desktop deploy/;
+    mv $BIN deploy/;
+    echo "Donwload and run linuxdeployqt";
+    wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage";
+    chmod a+x linuxdeployqt*.AppImage;
+    unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH;
+    mkdir -p deploy/usr/share/doc/libc6/;
+    cp /usr/share/doc/libc6/copyright deploy/usr/share/doc/libc6/copyright;
+    ./linuxdeployqt*.AppImage deploy/$BIN.desktop -unsupported-allow-new-glibc -bundle-non-qt-libs -extra-plugins=iconengines,imageformats -verbose=2 -qmldir=../qml -appimage;
+    mv $BIN*.AppImage $BIN.AppImage;
   fi
-- echo "Build project";
-- mkdir build && cd build;
-- qmake ..;
-- make;
+- if [ ! -z "${DMG}" ]; then
+    echo "Build project";
+    mkdir build && cd build;
+    qmake ..;
+    make;
+    echo "Run macdeployqt";
+    macdeployqt $BIN.app/ -qmldir=../qml -dmg;
+    find . | grep dmg;
+  fi
+
+after_success:
+- if [ "${TRAVIS_PULL_REQUEST}" != false ] || [ "${TRAVIS_BRANCH}" != "master" ]; then
+    echo "This is not the master branch, no deploy will be done";
+    travis_terminate 0;
+  fi
+- wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+- if [ ! -z "${APPIMAGE}" ]; then bash ./upload.sh $ARTIFACT; fi
+- if [ ! -z "${DMG}" ]; then bash ./upload.sh $ARTIFACT; fi
