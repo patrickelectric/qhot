@@ -1,0 +1,79 @@
+version: '{branch}-{build}'
+
+branches:
+  only:
+    - master
+
+init:
+  # Create our AppVeyor version
+  - ps: $env:commit = $env:appveyor_repo_commit.SubString(0,7)
+  - ps: Update-AppveyorBuild -Version ("{0}-{1}-{2}" -f $env:appveyor_repo_branch,$env:appveyor_build_number,$env:commit )
+
+
+environment:
+  VSVER: 14.0
+  matrix:
+    - MSVC_VERSION: 15
+      RUNTIME_LINKAGE: static
+      QT_VERSION: 5.12
+      QT_LINKAGE: static
+      COVERITY_BUILD_CANDIDATE: True
+      #https://www.appveyor.com/docs/build-environment/#qt
+      QTDIR: C:\Qt\5.12\msvc2015_64
+      PRJLIBS: VCRUNTIME140.dll MSVCP140.dll
+
+configuration:
+  - release
+  - debug
+
+install:
+  # Set some vars
+  - '%QTDIR%\bin\qtenv2.bat'
+  - qmake -v
+  - set PRJLIBDIR=%WINDIR%\SysWOW64 # Find vclibs
+  - set QTDIR
+  - if %QTDIR:_64=%==%QTDIR% ( set ARCH=x86 ) else set ARCH=x64
+  - if %QTDIR:msvc=%==%QTDIR% g++ --version
+  - if %QTDIR:msvc=%==%QTDIR% set make=mingw32-make.exe
+  - if %QTDIR:msvc=%==%QTDIR% %make% --version
+  - if not %QTDIR:msvc=%==%QTDIR% call "%ProgramFiles(x86)%\Microsoft Visual Studio %VSVER%\VC\vcvarsall.bat" %ARCH%
+  - if not %QTDIR:msvc=%==%QTDIR% set make=nmake.exe
+  - if not %QTDIR:msvc=%==%QTDIR% %make% /? > nul
+  - set BIN=qhot
+
+before_build:
+  # Prepare the out-of-source build directory.
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - mkdir %APPVEYOR_BUILD_FOLDER%-build
+  - qmake -o %APPVEYOR_BUILD_FOLDER%-build -r -Wall -Wlogic -Wparser CONFIG+=%CONFIGURATION% %APPVEYOR_BUILD_FOLDER%
+
+build_script:
+  # Compile it and check for .exe
+  - cd %APPVEYOR_BUILD_FOLDER%-build
+  - '%make%'
+  - dir /b /s *.exe
+
+after_build:
+  # Add a link to the build output within the source directory. This is needed because AppVeyor does
+  # not support extracting artifacts from out-of-source build directories. See 'artifacts' below.
+  - dir /b /s *.exe
+  - mkdir deploy
+  - copy %APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\%BIN%.exe deploy\%BIN%.exe
+  - windeployqt --qmldir %APPVEYOR_BUILD_FOLDER%/qml --%CONFIGURATION% deploy/%BIN%.exe --verbose=2
+  - for %%I in (%PRJLIBS%) do copy %PRJLIBDIR%\%%I deploy\
+  - 7z a -tzip %BIN%_%CONFIGURATION%.zip deploy -r
+  - copy %APPVEYOR_BUILD_FOLDER%-build\%BIN%_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\%BIN%_%CONFIGURATION%.zip
+  - dir /b /s *.zip
+
+artifacts:
+  - path: '%BIN%_%CONFIGURATION%.zip'
+    name: '%BIN%'
+
+deploy:
+  - provider: GitHub
+    release: continuous
+    artifact: '%BIN%'
+    draft: false
+    prerelease: true
+    auth_token:
+      secure: BC8BBwf6sV+/f+AoRHCskXQBXwdvXuXB7sFuJWN0lbIzJs8E87T77aY5HovyaFmc
