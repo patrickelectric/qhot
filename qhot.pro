@@ -3,6 +3,11 @@ TARGET = qhot
 CONFIG += \
     c++14
 
+win32 {
+    # Enable console under windows
+    CONFIG += console
+}
+
 QT += gui qml widgets
 
 HEADERS += \
