@@ -12,6 +12,7 @@ ProvidesSomething::ProvidesSomething()
     });
 
     connect(&_fileSystemWatcher, &QFileSystemWatcher::fileChanged, this, [this](const QString& path){
+        Q_UNUSED(path)
         m_engine->clearComponentCache();
         emit filePathChanged();
     });
