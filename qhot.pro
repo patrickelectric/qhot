@@ -8,7 +8,21 @@ win32 {
     CONFIG += console
 }
 
-QT += gui qml widgets
+QT += \
+    bluetooth \
+    charts \
+    gui \
+    multimedia \
+    network \
+    opengl \
+    printsupport \
+    qml \
+    quick \
+    quickwidgets \
+    svg \
+    widgets \
+    xml \
+    texttospeech
 
 HEADERS += \
     src/providessomething.h \
