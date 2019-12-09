@@ -9,10 +9,7 @@ win32 {
 }
 
 QT += \
-    bluetooth \
-    charts \
     gui \
-    multimedia \
     network \
     opengl \
     printsupport \
@@ -22,7 +19,6 @@ QT += \
     svg \
     widgets \
     xml \
-    texttospeech
 
 HEADERS += \
     src/providessomething.h \
