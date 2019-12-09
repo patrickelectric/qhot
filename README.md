@@ -14,6 +14,9 @@ Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
 - :apple: [MacOS](https://github.com/patrickelectric/qhot/releases/download/continuous/qhot.dmg)
 - :penguin: [Linux](https://github.com/patrickelectric/qhot/releases/download/continuous/qhot.AppImage)
 
+## Install :zap:
+- Arch [AUR]: `qhot-git`
+
 #### How to use
 `./qhot.exe myFile.qml` or `./qhot.dmg myFile.qml` or `./qhot.AppImage myFile.qml`
 
