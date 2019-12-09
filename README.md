@@ -6,6 +6,8 @@
 Live preview of your qml modifications !
 It works with nested qml components !
 
+Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
+
 ## Downloads :package:
 
 - :computer: [Windows](https://github.com/patrickelectric/qhot/releases/download/continuous/qhot_release.zip)
