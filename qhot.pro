@@ -1,7 +1,7 @@
 TARGET = qhot
 
 CONFIG += \
-    c++14
+    c++17
 
 win32 {
     # Enable console under windows
@@ -19,6 +19,8 @@ QT += \
     svg \
     widgets \
     xml \
+
+include($$PWD/src/commandline/commandlineparser.pri)
 
 HEADERS += \
     src/providessomething.h \
