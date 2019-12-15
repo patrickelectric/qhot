@@ -46,7 +46,12 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
 
 void CommandLineParser::printHelp()
 {
-    for (const auto optionStruct : _optionsStruct) {
-        qDebug() << optionStruct.option.names() << "\t\t\t" << optionStruct.option.description();
+    for (const auto& optionStruct : _optionsStruct) {
+        auto names = optionStruct.option.names();
+        for(auto& name: names) {
+            name.prepend(name.length() > 1 ? "--" : "-");
+        }
+
+        qDebug().noquote() << names.join(", ") << "\t\t\t" << optionStruct.option.description();
     }
 }
