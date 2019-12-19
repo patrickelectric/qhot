@@ -21,6 +21,7 @@ environment:
       #https://www.appveyor.com/docs/build-environment/#qt
       QTDIR: C:\Qt\5.12\msvc2015_64
       PRJLIBS: VCRUNTIME140.dll MSVCP140.dll
+      QML_PLUGINS: QtQml QtQuick QtQuick.2 QtPositioning QtMultimedia QtLocation QtCharts QtGamepad QtGraphicalEffects 
 
 configuration:
   - release
@@ -61,6 +62,7 @@ after_build:
   - copy %APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\%BIN%.exe deploy\%BIN%.exe
   - windeployqt --qmldir %APPVEYOR_BUILD_FOLDER%/qml --%CONFIGURATION% deploy/%BIN%.exe --verbose=2
   - for %%I in (%PRJLIBS%) do copy %PRJLIBDIR%\%%I deploy\
+  - for %%I in (%QML_PLUGINS%) do xcopy /E /I /Y "%QTDIR%\qml\%%I" deploy\%%I
   - 7z a -tzip %BIN%_%CONFIGURATION%.zip deploy -r
   - copy %APPVEYOR_BUILD_FOLDER%-build\%BIN%_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\%BIN%_%CONFIGURATION%.zip
   - dir /b /s *.zip
