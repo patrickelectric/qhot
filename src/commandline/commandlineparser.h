@@ -66,7 +66,7 @@ private:
     QList<OptionStruct> _optionsStruct {
         {
             {{"help", "h", "?"}, "Give this friendly help message for our confort"},
-            [this](const QString&) { printHelp(); },
+            [this](const QString&) { printHelp(); exit(0); },
         },
         {
             {"desktop", "Force use of desktop GL (AA_UseDesktopOpenGL)"},
