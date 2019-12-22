@@ -20,6 +20,8 @@ Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
 #### How to use
 `./qhot.exe myFile.qml` or `./qhot.dmg myFile.qml` or `./qhot.AppImage myFile.qml`
 
+![](/doc/example.gif)
+
 ##### Supported commands:
 ```sh
 --help, -h, -?           Give this friendly help message for our confort
@@ -32,5 +34,3 @@ Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
 --plugin-path, -P        Add list of **plugin** paths (path:path)
 --translation            Set the translation file (file)
 ```
-
-![](/doc/example.gif)
