@@ -51,6 +51,8 @@ void CommandLineParser::printHelp()
             name.prepend(name.length() > 1 ? "--" : "-");
         }
 
-        qDebug().noquote() << names.join(", ") << "\t\t\t" << optionStruct.option.description();
+        auto commands = names.join(", ");
+        auto tabs = QString("\t").repeated(3 - commands.length()/8);
+        qDebug().noquote() << commands << tabs << optionStruct.option.description();
     }
 }
