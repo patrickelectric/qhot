@@ -20,4 +20,17 @@ Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
 #### How to use
 `./qhot.exe myFile.qml` or `./qhot.dmg myFile.qml` or `./qhot.AppImage myFile.qml`
 
+##### Supported commands:
+```sh
+--help, -h, -?           Give this friendly help message for our confort
+--desktop                Force use of desktop GL (AA_UseDesktopOpenGL)
+--gles                   Force use of GLES (AA_UseOpenGLES)
+--software               Force use of software rendering (Qt::AA_UseSoftwareOpenGL)
+--scaling                Enable High DPI scaling (AA_EnableHighDpiScaling)
+--no-scaling             Disable High DPI scaling (AA_DisableHighDpiScaling)
+--import-path, -I        Add list of **import** paths (path:path)
+--plugin-path, -P        Add list of **plugin** paths (path:path)
+--translation            Set the translation file (file)
+```
+
 ![](/doc/example.gif)
