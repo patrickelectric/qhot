@@ -12,19 +12,20 @@ int main(int argc, char *argv[])
 {
     qmlRegisterSingletonType<ProvidesSomething>("ProvidesSomething", 1, 0, "ProvidesSomething", ProvidesSomething::qmlSingletonRegister);
 
-    CommandLineParser parser(argc, argv);
+    CommandLineParser commandLineParser(argc, argv);
 
     QGuiApplication app(argc, argv);
     app.setOrganizationDomain("patrickelectric.work");
     app.setOrganizationName("patrickelectric");
 
     QQmlApplicationEngine appEngine(QUrl("qrc:/main.qml"));
+    commandLineParser.setEngine(&appEngine);
 
     appEngine.setUrlInterceptor(UrlInterceptor::self());
     ProvidesSomething::self()->setEngine(&appEngine);
 
-    if(parser.positionalArguments().size()) {
-        QDir dir(parser.positionalArguments()[0]);
+    if(commandLineParser.positionalArguments().size()) {
+        QDir dir(commandLineParser.positionalArguments()[0]);
         if(!QFile::exists(dir.absolutePath())) {
             qDebug() << "Path" << dir.absolutePath() << "does not exist";
         } else {

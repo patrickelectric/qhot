@@ -3,6 +3,8 @@
 #include <functional>
 
 #include <QCommandLineParser>
+#include <QQmlEngine>
+
 
 /**
  * @brief Deal with command lines
@@ -24,6 +26,17 @@ public:
      */
     ~CommandLineParser() = default;
 
+    /**
+     * @brief Set the QQmlEngine to do the necessary configuration
+     *
+     * @param qmlengine
+     */
+    void setEngine(QQmlEngine* engine)
+    {
+        engine->setImportPathList(_importPaths);
+        engine->setPluginPathList(_pluginPaths);
+    }
+
 private:
     struct OptionStruct {
         QCommandLineOption option;
@@ -31,6 +44,9 @@ private:
     };
 
     void printHelp();
+
+    QStringList _importPaths;
+    QStringList _pluginPaths;
 
     QList<OptionStruct> _optionsStruct {
         {
@@ -56,6 +72,14 @@ private:
         {
             {"no-scaling", "Disable High DPI scaling (AA_DisableHighDpiScaling)"},
             [](const QString&) { QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling); },
+        },
+        {
+            {{"import-path", "I"}, "Add list of **import** paths (path:path)", "paths"},
+            [this](const QString& argument) { _importPaths = argument.split(':'); },
+        },
+        {
+            {{"plugin-path", "P"}, "Add list of **plugin** paths (path:path)", "paths"},
+            [this](const QString& argument) { _pluginPaths = argument.split(':'); },
         },
     };
 };
