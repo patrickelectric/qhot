@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.3
+import QtQuick.Dialogs 1.3
 
 import ProvidesSomething 1.0
 
@@ -8,15 +9,29 @@ ApplicationWindow {
     title: "QHot"
     visible: true
 
-    DropArea {
-        id: dropArea
-        anchors.fill: parent
-        keys: ["text/plain"]
-        onEntered: print('entered')
-        onDropped: {
-            // Only get the first file
-            ProvidesSomething.filePath = drop.text.split('\n')[0]
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        folder: shortcuts.home
+        onAccepted: {
+            print("File selected:", fileDialog.fileUrl)
+            loader.source = fileDialog.fileUrl
         }
+    }
+
+    Button {
+        id: button
+        text: "Clicke here!\n Or add item as argument.\n" + error
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.margins: 5
+        onClicked: {
+            fileDialog.visible = true
+        }
+
+        property var error: ""
     }
 
     Connections {
@@ -30,16 +45,14 @@ ApplicationWindow {
     Loader {
         id: loader
         anchors.fill: parent
-        property var recoverSource: "qrc:/recover.qml"
-        source: recoverSource
 
         onStatusChanged: {
-            if(loader.status === Loader.Error) {
-                loader.source = recoverSource
-                loader.item.state = "error"
-            } else if(loader.status === Loader.Null) {
-                loader.source = recoverSource
-                loader.item.state = "null"
+            if(loader.status === Loader.Error || loader.status === Loader.Null) {
+                button.visible = true
+                button.error = "Failed to load."
+            } else {
+                button.visible = false
+                button.error = ""
             }
         }
     }

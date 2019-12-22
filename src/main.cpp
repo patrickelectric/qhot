@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
     CommandLineParser parser(argc, argv);
 
     QGuiApplication app(argc, argv);
+    app.setOrganizationDomain("patrickelectric.work");
+    app.setOrganizationName("patrickelectric");
 
     QQmlApplicationEngine appEngine(QUrl("qrc:/main.qml"));
 
