@@ -3,7 +3,9 @@
 #include <functional>
 
 #include <QCommandLineParser>
+#include <QDebug>
 #include <QQmlEngine>
+#include <QTranslator>
 
 
 /**
@@ -37,6 +39,17 @@ public:
         engine->setPluginPathList(_pluginPaths);
     }
 
+    /**
+     * @brief Set the QCoreApplication to do the necessary configuration
+     *
+     * @param application
+     */
+    void setApplication(QCoreApplication* application)
+    {
+        Q_UNUSED(application)
+        QCoreApplication::installTranslator(&_translator);
+    }
+
 private:
     struct OptionStruct {
         QCommandLineOption option;
@@ -47,6 +60,8 @@ private:
 
     QStringList _importPaths;
     QStringList _pluginPaths;
+
+    QTranslator _translator;
 
     QList<OptionStruct> _optionsStruct {
         {
@@ -80,6 +95,14 @@ private:
         {
             {{"plugin-path", "P"}, "Add list of **plugin** paths (path:path)", "paths"},
             [this](const QString& argument) { _pluginPaths = argument.split(':'); },
+        },
+        {
+            {"translation", "Set the translation file (file)", "file"},
+            [this](const QString& argument) {
+                if(!_translator.load(argument)) {
+                    qDebug() << "Failed to load translation file:" << argument;
+                }
+            },
         },
     };
 };

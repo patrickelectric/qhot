@@ -1,5 +1,4 @@
 #include "commandlineparser.h"
-#include <QDebug>
 
 CommandLineParser::CommandLineParser(int argc, char *argv[])
     : QCommandLineParser()

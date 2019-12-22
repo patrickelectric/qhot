@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setOrganizationDomain("patrickelectric.work");
     app.setOrganizationName("patrickelectric");
+    commandLineParser.setApplication(&app);
 
     QQmlApplicationEngine appEngine(QUrl("qrc:/main.qml"));
     commandLineParser.setEngine(&appEngine);
