@@ -2,6 +2,7 @@
 
 [![Travis Build Status](https://travis-ci.org/patrickelectric/qhot.svg?branch=master)](https://travis-ci.org/patrickelectric/qhot)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/patrickelectric/qhot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/patrickelectric/qhot/context:cpp)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpatrickelectric%2Fqhot.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpatrickelectric%2Fqhot?ref=badge_shield)
 
 Live preview of your qml modifications !
 It works with nested qml components !
@@ -34,3 +35,7 @@ Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
 --plugin-path, -P        Add list of **plugin** paths (path:path)
 --translation            Set the translation file (file)
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpatrickelectric%2Fqhot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpatrickelectric%2Fqhot?ref=badge_large)
