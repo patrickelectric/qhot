@@ -1,6 +1,7 @@
 # QHot
 
 [![Travis Build Status](https://travis-ci.org/patrickelectric/qhot.svg?branch=master)](https://travis-ci.org/patrickelectric/qhot)
+[![Build status](https://ci.appveyor.com/api/projects/status/jpvs6sld54hfbon1/branch/master?svg=true)](https://ci.appveyor.com/project/patrickelectric/qhot/branch/master)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/patrickelectric/qhot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/patrickelectric/qhot/context:cpp)
 
 Live preview of your qml modifications !
