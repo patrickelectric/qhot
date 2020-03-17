@@ -9,12 +9,15 @@ win32 {
 }
 
 QT += \
+    core \
+    charts \
     gui \
     network \
     opengl \
     printsupport \
     qml \
     quick \
+    quickcontrols2 \
     quickwidgets \
     svg \
     widgets \
