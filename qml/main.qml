@@ -49,6 +49,7 @@ ApplicationWindow {
 
     Loader {
         id: loader
+        focus: true
         anchors.fill: parent
 
         onStatusChanged: {
