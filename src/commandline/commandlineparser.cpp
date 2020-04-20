@@ -43,6 +43,17 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
     }
 };
 
+void CommandLineParser::setEngine(QQmlEngine* engine)
+{
+    for (const auto path : _importPaths) {
+        engine->addImportPath(path);
+    }
+
+    for (const auto path : _pluginPaths) {
+        engine->addPluginPath(path);
+    }
+}
+
 void CommandLineParser::printHelp()
 {
     for (const auto& optionStruct : _optionsStruct) {
