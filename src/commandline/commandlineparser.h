@@ -33,11 +33,7 @@ public:
      *
      * @param qmlengine
      */
-    void setEngine(QQmlEngine* engine)
-    {
-        engine->setImportPathList(_importPaths);
-        engine->setPluginPathList(_pluginPaths);
-    }
+    void setEngine(QQmlEngine* engine);
 
     /**
      * @brief Set the QCoreApplication to do the necessary configuration
