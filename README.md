@@ -34,4 +34,5 @@ Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) !
 --import-path, -I        Add list of **import** paths (path:path)
 --plugin-path, -P        Add list of **plugin** paths (path:path)
 --translation            Set the translation file (file)
+--style                  Change style
 ```
