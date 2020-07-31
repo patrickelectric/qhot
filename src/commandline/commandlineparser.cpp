@@ -63,7 +63,7 @@ void CommandLineParser::printHelp()
         }
 
         auto commands = names.join(", ");
-        auto tabs = QString("\t").repeated(3 - commands.length()/8);
+        auto tabs = QString("\t").repeated(3 - (commands.length() + 1)/8);
         qDebug().noquote() << commands << tabs << optionStruct.option.description();
     }
 }
