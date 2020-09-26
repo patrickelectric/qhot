@@ -16,6 +16,10 @@ ApplicationWindow {
     title: "QHot"
     visible: true
 
+    Component.onCompleted: {
+        window.flags |= Qt.WindowStaysOnTopHint
+    }
+
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
