@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include <QtGlobal>
+
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QQmlEngine>
@@ -108,10 +110,13 @@ private:
             [this](const QString& argument) {
                 if(!_translator.load(argument)) {
                     qDebug() << "Failed to load translation file:" << argument;
-                } else {
-                    qDebug() << "Translation loaded successfully, language:" << _translator.language();
-                    qDebug() << _translator.translate(nullptr, "car");
+                    return;
                 }
+
+#if QT_VERSION > QT_VERSION_CHECK(5, 15, 0)
+                qDebug() << "Translation loaded successfully, language:" << _translator.language();
+                qDebug() << _translator.translate(nullptr, "car");
+#endif
             },
         },
     };
