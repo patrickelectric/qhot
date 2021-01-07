@@ -62,6 +62,8 @@ private:
     QList<std::function<void()>> _posAppFunctions;
 
     void printHelp();
+    void _parseQHotProfile(QStringView profilePath);
+    void _translate(const QString& translationFile);
 
     QStringList _importPaths;
     QStringList _pluginPaths;
@@ -107,17 +109,11 @@ private:
         },
         {
             {"translation", "Set the translation file (file)", "file"},
-            [this](const QString& argument) {
-                if(!_translator.load(argument)) {
-                    qDebug() << "Failed to load translation file:" << argument;
-                    return;
-                }
-
-#if QT_VERSION > QT_VERSION_CHECK(5, 15, 0)
-                qDebug() << "Translation loaded successfully, language:" << _translator.language();
-                qDebug() << _translator.translate(nullptr, "car");
-#endif
-            },
+            [this](const QString& argument) { _translate(argument); },
+        },
+        {
+            {"profile-path", "Add path to qhot_profile.json file", "file"},
+            [this](const QString& argument) { _parseQHotProfile(argument); },
         },
     };
 };

@@ -1,5 +1,11 @@
 #include "commandlineparser.h"
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+
 CommandLineParser::CommandLineParser(int argc, char *argv[])
     : QCommandLineParser()
 {
@@ -66,4 +72,85 @@ void CommandLineParser::printHelp()
         auto tabs = QString("\t").repeated(3 - (commands.length() + 1)/8);
         qDebug().noquote() << commands << tabs << optionStruct.option.description();
     }
+}
+
+void CommandLineParser::_parseQHotProfile(QStringView profilePath)
+{
+    QFile file{QString{"%1/qhot-profile.json"}.arg(profilePath)};
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Failed to open json file for reading.";
+        return;
+    }
+
+    QDir profileDir{profilePath.toString()};
+
+    auto jsonData = file.readAll();
+    QJsonParseError error;
+    auto jsonDoc = QJsonDocument::fromJson(jsonData, &error);
+    if (jsonDoc.isNull()) {
+        qWarning() << error.errorString();
+        return;
+    }
+    if (!jsonDoc.isObject()) {
+        qWarning() << "Top level item should be an object";
+        return;
+    }
+
+    auto jsonObject = jsonDoc.object();
+
+    auto desktop = jsonObject.value(QLatin1String{"desktop"});
+    if (desktop.toBool(), false)
+        QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+
+    auto style = jsonObject.value(QLatin1String{"style"});
+    if (style.isString()) {
+        QQuickStyle::setStyle(style.toString());
+    }
+
+    auto gles = jsonObject.value(QLatin1String{"gles"});
+    if (gles.toBool(), false)
+        QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
+
+    auto software = jsonObject.value(QLatin1String{"software"});
+    if (software.toBool(), false)
+        QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
+
+    auto scaling = jsonObject.value(QLatin1String{"scaling"});
+    if (scaling.toBool(), false)
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    auto importPaths = jsonObject.value(QLatin1String{"import-path"});
+    if (importPaths.isArray()) {
+        const auto paths = importPaths.toArray();
+        for (const auto &path : paths) {
+            _importPaths.append(profileDir.absoluteFilePath(path.toString()));
+        }
+    }
+
+    auto pluginPaths = jsonObject.value(QLatin1String{"plugin-path"});
+    if (pluginPaths.isArray()) {
+        const auto paths = pluginPaths.toArray();
+        for (const auto &path : paths) {
+            _pluginPaths.append(profileDir.absoluteFilePath(path.toString()));
+        }
+    }
+
+    auto translationFile = jsonObject.value(QLatin1String{"translation"});
+    if (translationFile.isString()) {
+        _translate(translationFile.toString());
+    }
+}
+
+void CommandLineParser::_translate(const QString &translationFile)
+{
+    if(!_translator.load(translationFile)) {
+        qDebug() << "Failed to load translation file:" << translationFile;
+        return;
+    }
+
+#if QT_VERSION > QT_VERSION_CHECK(5, 15, 0)
+    qDebug() << "Translation loaded successfully, language:" << _translator.language();
+    qDebug() << _translator.translate(nullptr, "car");
+#endif
+
 }
