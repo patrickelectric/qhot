@@ -3,12 +3,6 @@ import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.1
 import QtQuick.Dialogs 1.3
 
-import QtCharts 2.3
-
-import QtGraphicalEffects 1.0
-
-import QtQml.Models 2.2
-
 import ProvidesSomething 1.0
 
 ApplicationWindow {
