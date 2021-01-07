@@ -26,17 +26,14 @@ ApplicationWindow {
 
     Button {
         id: button
-        text: "Clicke here!\n Or add item as argument.\n" + error
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.margins: 5
-        onClicked: {
-            fileDialog.visible = true
-        }
 
         property var error: ""
+
+        anchors.fill: parent
+        anchors.margins: 5
+        text: "Clicke here!\n Or add item as argument.\n" + error
+        onClicked: fileDialog.visible = true
+
     }
 
     Connections {
@@ -49,9 +46,13 @@ ApplicationWindow {
 
     Loader {
         id: loader
-        focus: true
         anchors.fill: parent
-
+        focus: true
+        Keys.onPressed: {
+            if (event.key === Qt.Key_F4 && (event.modifiers & Qt.AltModifier)) {
+                Qt.quit()
+            }
+        }
         onStatusChanged: {
             if(loader.status === Loader.Error || loader.status === Loader.Null) {
                 button.visible = true
