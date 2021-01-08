@@ -33,7 +33,7 @@ ApplicationWindow {
         anchors.margins: 5
         text: "Clicke here!\n Or add item as argument.\n" + error
         onClicked: fileDialog.visible = true
-
+        visible: loader.status === Loader.Null
     }
 
     Connections {
@@ -44,22 +44,28 @@ ApplicationWindow {
         }
     }
 
-    Loader {
-        id: loader
+    Rectangle {
         anchors.fill: parent
-        focus: true
-        Keys.onPressed: {
-            if (event.key === Qt.Key_F4 && (event.modifiers & Qt.AltModifier)) {
-                Qt.quit()
+        color: ProvidesSomething.background
+        visible: !button.visible
+
+        Loader {
+            id: loader
+            focus: true
+            anchors.fill: parent
+            Keys.onPressed: {
+                if (event.key === Qt.Key_F4 && (event.modifiers & Qt.AltModifier)) {
+                    Qt.quit()
+                }
             }
-        }
-        onStatusChanged: {
-            if(loader.status === Loader.Error || loader.status === Loader.Null) {
-                button.visible = true
-                button.error = "Failed to load."
-            } else {
-                button.visible = false
-                button.error = ""
+            onStatusChanged: {
+                if(loader.status === Loader.Error || loader.status === Loader.Null) {
+                    button.visible = true
+                    button.error = "Failed to load."
+                } else {
+                    button.visible = false
+                    button.error = ""
+                }
             }
         }
     }
