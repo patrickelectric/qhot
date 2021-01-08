@@ -1,5 +1,7 @@
 set(CMAKE_AUTOMOC ON)
 
+# Automatically link Qt executables to qtmain target on Windows
+cmake_policy(SET CMP0020 NEW)
 
 qt5_add_resources(RESOURCES ../resources.qrc)
 
