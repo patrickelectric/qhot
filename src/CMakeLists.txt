@@ -1,5 +1,7 @@
 set(CMAKE_AUTOMOC ON)
 
+# Automatically link Qt executables to qtmain target on Windows
+cmake_policy(SET CMP0020 NEW)
 
 qt5_add_resources(RESOURCES ../resources.qrc)
 
@@ -11,7 +13,7 @@ add_executable(qhot
     ${RESOURCES}
 )
 
-set_target_properties(qhot PROPERTIES CXX_STANDARD 17)
+set_target_properties(qhot PROPERTIES CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
 target_include_directories(qhot
     PRIVATE
