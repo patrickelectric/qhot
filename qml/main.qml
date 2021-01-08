@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.1
 import QtQuick.Dialogs 1.3
+import QtQuick.Layouts 1.3
 
 import QtCharts 2.3
 
@@ -16,6 +17,18 @@ ApplicationWindow {
     title: "QHot"
     visible: true
 
+    Shortcut {
+        context: "ApplicationShortcut"
+        sequence: "Ctrl+Meta+Q"
+        onActivated: Qt.quit()
+    }
+
+    Shortcut {
+        context: "ApplicationShortcut"
+        sequence: "Ctrl+Meta+F1"
+        onActivated: popup.opened ? popup.close() : popup.open()
+    }
+
     Component.onCompleted: {
         window.flags |= Qt.WindowStaysOnTopHint
     }
@@ -27,6 +40,52 @@ ApplicationWindow {
         onAccepted: {
             print("File selected:", fileDialog.fileUrl)
             loader.source = fileDialog.fileUrl
+        }
+    }
+
+    ColorDialog {
+        id: colorDialog
+        title: "Select background color"
+        currentColor: loaderBackground.color
+        color: ProvidesSomething.background
+        onAccepted: popup.close()
+    }
+
+    Popup {
+        id: popup
+        width: 300
+        height: 200
+        x: (window.width - width) / 2
+        y: (window.height - height) / 2
+
+        onOpenedChanged: content.state = opened ? "opened" : ""
+        onClosed: loader.forceActiveFocus()
+
+        Rectangle {
+            id: content
+            anchors.fill: parent
+            color: ProvidesSomething.background
+
+            RowLayout{
+                anchors.fill: parent
+
+                Button {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "background"
+                    onClicked: colorDialog.open()
+                }
+            }
+
+            states: [
+                State {
+                    name: "opened"
+                    PropertyChanges {
+                        target: window
+                        width: popup.width
+                        height: popup.height
+                    }
+                }
+            ]
         }
     }
 
@@ -51,8 +110,9 @@ ApplicationWindow {
     }
 
     Rectangle {
+        id: loaderBackground
         anchors.fill: parent
-        color: ProvidesSomething.background
+        color: colorDialog.color
         visible: !button.visible
 
         Loader {
@@ -70,4 +130,5 @@ ApplicationWindow {
             }
         }
     }
+
 }
