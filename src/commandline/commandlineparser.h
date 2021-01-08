@@ -10,6 +10,7 @@
 #include <QQuickStyle>
 #include <QTranslator>
 
+#include "../providessomething.h"
 
 /**
  * @brief Deal with command lines
@@ -114,6 +115,10 @@ private:
         {
             {"profile-path", "Add path to qhot_profile.json file", "file"},
             [this](const QString& argument) { _parseQHotProfile(argument); },
+        },
+        {
+            {"background", "Set the background color", "color"},
+            [](const QString& color) { ProvidesSomething::self()->setBackground(color); },
         },
     };
 };

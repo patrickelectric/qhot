@@ -139,6 +139,11 @@ void CommandLineParser::_parseQHotProfile(QStringView profilePath)
     if (translationFile.isString()) {
         _translate(translationFile.toString());
     }
+
+    auto background = jsonObject.value(QLatin1String{"background"});
+    if (background.isString()) {
+        ProvidesSomething::self()->setBackground(background.toString());
+    }
 }
 
 void CommandLineParser::_translate(const QString &translationFile)
