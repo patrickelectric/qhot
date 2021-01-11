@@ -51,11 +51,7 @@ public:
      *
      * @param url
      */
-    void setFilePath(const QUrl& url) {
-        _url = url;
-        _fileSystemWatcher.addPath(url.toLocalFile());
-        emit filePathChanged();
-    }
+    void setFilePath(const QUrl& url);
 
     /**
      * @brief Set the qml engine

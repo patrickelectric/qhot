@@ -21,7 +21,7 @@ ApplicationWindow {
         folder: shortcuts.home
         onAccepted: {
             print("File selected:", fileDialog.fileUrl)
-            loader.source = fileDialog.fileUrl
+            ProvidesSomething.filePath = fileDialog.fileUrl
         }
     }
 
