@@ -12,7 +12,7 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
     setApplicationDescription("Hot reload for nested qml files.");
     addVersionOption();
 
-    for (const auto optionStruct : _optionsStruct) {
+    for (auto& optionStruct : std::as_const(_optionsStruct)) {
         addOption(optionStruct.option);
     }
 
@@ -22,7 +22,7 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
     }
     process(arguments);
 
-    for (const auto optionStruct : _optionsStruct) {
+    for (auto& optionStruct : std::as_const(_optionsStruct)) {
         if(!isSet(optionStruct.option)) {
             continue;
         }
@@ -32,17 +32,17 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
             QString result = value(optionStruct.option);
             if (!result.isEmpty()) {
                 qDebug().noquote() << QStringLiteral("%1 [%2]: %3")
-                                                .arg(optionStruct.option.names().first(),
+                                                .arg(optionStruct.option.names().constFirst(),
                                                     optionStruct.option.description(), result);
                 optionStruct.function(result);
             } else {
                 qDebug().noquote() << QStringLiteral("%1 [%2]: %3")
-                                                .arg(optionStruct.option.names().first(),
+                                                .arg(optionStruct.option.names().constFirst(),
                                                     optionStruct.option.description(), "No valid parameter.");
             }
         } else {
             qDebug().noquote() << QStringLiteral("%1 [%2]: ON")
-                                              .arg(optionStruct.option.names().first(),
+                                              .arg(optionStruct.option.names().constFirst(),
                                                   optionStruct.option.description());
             optionStruct.function({});
         }
@@ -51,18 +51,18 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
 
 void CommandLineParser::setEngine(QQmlEngine* engine)
 {
-    for (const auto path : _importPaths) {
+    for (auto& path : std::as_const(_importPaths)) {
         engine->addImportPath(path);
     }
 
-    for (const auto path : _pluginPaths) {
+    for (auto& path : std::as_const(_pluginPaths)) {
         engine->addPluginPath(path);
     }
 }
 
 void CommandLineParser::printHelp()
 {
-    for (const auto& optionStruct : _optionsStruct) {
+    for (auto& optionStruct : std::as_const(_optionsStruct)) {
         auto names = optionStruct.option.names();
         for(auto& name: names) {
             name.prepend(name.length() > 1 ? "--" : "-");
