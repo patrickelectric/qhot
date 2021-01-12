@@ -2,18 +2,19 @@ import QtQuick 2.12
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.1
 import QtQuick.Dialogs 1.3
-import QtQuick.Layouts 1.12
+import QtQuick.Layouts 1.3
+import QtQuick.Window 2.3
 
 import ProvidesSomething 1.0
 
 ApplicationWindow {
     id: window
+
+    minimumWidth: 300
+    minimumHeight: 150
+
     title: "QHot"
     visible: true
-
-    Component.onCompleted: {
-        window.flags |= Qt.WindowStaysOnTopHint
-    }
 
     Shortcut {
         context: "ApplicationShortcut"
@@ -25,6 +26,27 @@ ApplicationWindow {
         context: "ApplicationShortcut"
         sequence: "ALT+F1"
         onActivated: popup.opened ? popup.close() : popup.open()
+    }
+
+    Shortcut {
+        property int currentVisibility: 0
+
+        function toggleVisibility() {
+            ++currentVisibility;
+            switch (currentVisibility) {
+            case 0:
+                return Window.AutomaticVisibility
+            case 1:
+                return Window.Maximized
+            case 2:
+                currentVisibility = -1
+                return Window.FullScreen
+            }
+        }
+
+        context: "ApplicationShortcut"
+        sequence: "ALT+F2"
+        onActivated: window.visibility = toggleVisibility()
     }
 
     FileDialog {
@@ -52,8 +74,6 @@ ApplicationWindow {
         x: (window.width - width) / 2
         y: (window.height - height) / 2
 
-        onOpenedChanged: content.state = opened ? "opened" : ""
-
         Rectangle {
             id: content
             anchors.fill: parent
@@ -68,17 +88,6 @@ ApplicationWindow {
                     onClicked: colorDialog.open()
                 }
             }
-
-            states: [
-                State {
-                    name: "opened"
-                    PropertyChanges {
-                        target: window
-                        width: popup.width
-                        height: popup.height
-                    }
-                }
-            ]
         }
     }
 
@@ -123,4 +132,35 @@ ApplicationWindow {
         }
     }
 
+    Item {
+        id: stateContainer
+        state: {
+            if (popup.opened) {
+                return "popupOpened"
+            } else if (loader.status === Loader.Ready) {
+                return "itemLoaded"
+            }
+
+            return ""
+        }
+
+        states: [
+            State {
+                name: "popupOpened"
+                PropertyChanges {
+                    target: window
+                    width: popup.width
+                    height: popup.height
+                }
+            },
+            State {
+                name: "itemLoaded"
+                PropertyChanges {
+                    target: window
+                    width: loader.item.width
+                    height: loader.item.height
+                }
+            }
+        ]
+    }
 }
