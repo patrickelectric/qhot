@@ -24,3 +24,13 @@ target_link_libraries(qhot
     Qt5::Qml
     Qt5::QuickControls2
 )
+
+get_filename_component(QT_INSTALL_PREFIX ${QT_QMAKE_EXECUTABLE} DIRECTORY)
+if (EXISTS ${QT_INSTALL_PREFIX})
+    install(
+        TARGETS qhot
+        RUNTIME
+        DESTINATION ${QT_INSTALL_PREFIX}
+    )
+endif()
+
