@@ -22,3 +22,14 @@ target_link_libraries(qhot
     Qt5::Qml
     Qt5::QuickControls2
 )
+
+get_target_property(QT_MOC_EXECUTABLE Qt5::moc LOCATION)
+get_filename_component(QT_INSTALL_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
+if (EXISTS ${QT_INSTALL_PREFIX})
+    install(
+        TARGETS qhot
+        RUNTIME
+        DESTINATION ${QT_INSTALL_PREFIX}
+    )
+endif()
+
