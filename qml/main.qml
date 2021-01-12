@@ -16,6 +16,10 @@ ApplicationWindow {
     title: "QHot"
     visible: true
 
+    Component.onCompleted: {
+        window.flags |= Qt.WindowStaysOnTopHint | Qt.WindowTitleHint
+    }
+
     Shortcut {
         context: "ApplicationShortcut"
         sequence: "Ctrl+Q"
