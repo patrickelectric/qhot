@@ -15,6 +15,18 @@ ApplicationWindow {
         window.flags |= Qt.WindowStaysOnTopHint
     }
 
+    Shortcut {
+        context: "ApplicationShortcut"
+        sequence: "Ctrl+Q"
+        onActivated: Qt.quit()
+    }
+
+    Shortcut {
+        context: "ApplicationShortcut"
+        sequence: "ALT+F1"
+        onActivated: popup.opened ? popup.close() : popup.open()
+    }
+
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
@@ -41,7 +53,6 @@ ApplicationWindow {
         y: (window.height - height) / 2
 
         onOpenedChanged: content.state = opened ? "opened" : ""
-        onClosed: loader.forceActiveFocus()
 
         Rectangle {
             id: content
@@ -100,13 +111,6 @@ ApplicationWindow {
         Loader {
             id: loader
             focus: true
-            Keys.onPressed: {
-                if (event.key === Qt.Key_Q && (event.modifiers & Qt.ControlModifier)) {
-                    Qt.quit()
-                } else if (event.key === Qt.Key_F1 && (event.modifiers & Qt.ControlModifier)) {
-                    popup.opened ? popup.close() : popup.open()
-                }
-            }
             onStatusChanged: {
                 if(loader.status === Loader.Error || loader.status === Loader.Null) {
                     button.visible = true
