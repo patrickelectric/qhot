@@ -73,8 +73,8 @@ ApplicationWindow {
 
     Popup {
         id: popup
-        width: 300
-        height: 200
+        width: window.minimumWidth
+        height: window.minimumHeight
         x: (window.width - width) / 2
         y: (window.height - height) / 2
 
@@ -143,33 +143,14 @@ ApplicationWindow {
 
     Item {
         id: stateContainer
-        state: {
-            if (popup.opened) {
-                return "popupOpened"
-            } else if (loader.status === Loader.Ready) {
-                return "itemLoaded"
+        state: loader.status === Loader.Ready ? "itemLoaded" : ""
+        states: State {
+            name: "itemLoaded"
+            PropertyChanges {
+                target: window
+                width: loader.item.width
+                height: loader.item.height
             }
-
-            return ""
         }
-
-        states: [
-            State {
-                name: "popupOpened"
-                PropertyChanges {
-                    target: window
-                    width: popup.width
-                    height: popup.height
-                }
-            },
-            State {
-                name: "itemLoaded"
-                PropertyChanges {
-                    target: window
-                    width: loader.item.width
-                    height: loader.item.height
-                }
-            }
-        ]
     }
 }
