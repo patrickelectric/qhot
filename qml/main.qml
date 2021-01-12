@@ -112,6 +112,11 @@ ApplicationWindow {
         onFilePathChanged: {
             var path = ProvidesSomething.filePath + "?t=" + Date.now()
             loader.source = path
+
+            // Workaround to reset old visibility
+            const oldVisibility = window.visibility
+            window.visibility = 0
+            window.visibility = oldVisibility
         }
     }
 
@@ -125,7 +130,7 @@ ApplicationWindow {
             id: loader
             focus: true
             onStatusChanged: {
-                if(loader.status === Loader.Error || loader.status === Loader.Null) {
+                if (loader.status === Loader.Error || loader.status === Loader.Null) {
                     button.visible = true
                     button.error = "Failed to load."
                 } else {
