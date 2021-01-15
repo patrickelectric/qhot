@@ -63,6 +63,15 @@ ApplicationWindow {
         }
     }
 
+    Shortcut {
+        context: "ApplicationShortcut"
+        sequence: "ALT+F3"
+        onActivated: {
+            stateContainer.state = ""
+            stateContainer.state = Qt.binding(() => loader.status === Loader.Ready ? "itemLoaded" : "")
+        }
+    }
+
     ColorDialog {
         id: colorDialog
         title: "Select background color"
