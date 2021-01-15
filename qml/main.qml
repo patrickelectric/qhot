@@ -113,7 +113,15 @@ ApplicationWindow {
             var path = ProvidesSomething.filePath + "?t=" + Date.now()
             loader.source = path
 
-            // Workaround to reset old visibility
+            // Workaround to reset old window settings
+            const oldWidth = window.width
+            window.width = 0
+            window.width = oldWidth
+
+            const oldHeight = window.height
+            window.height = 0
+            window.height = oldHeight
+
             const oldVisibility = window.visibility
             window.visibility = 0
             window.visibility = oldVisibility
