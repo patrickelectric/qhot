@@ -75,7 +75,7 @@ example:
     ],
     "background": "#808080",
     "quick-controls-conf": "src/qml/qtquickcontrols2.conf"
- }
+}
 ```
 
 The import paths in the example above are relative to the file itself, but can
@@ -96,3 +96,10 @@ to the console)
 
 It is also quite handy to add a shortcut in QtCreator to launch qhot. See
 [Keyboard Shortcuts](https://doc.qt.io/qtcreator/creator-keyboard-shortcuts.html).
+
+### Shortcuts
+
+- **F1** Launch popup to change background
+- **F2** Toggles visibility: maximized, full screen, back to default
+- **F3** After changing window size, reset window to loaded component size
+- **Ctrl+Q** Quit application
