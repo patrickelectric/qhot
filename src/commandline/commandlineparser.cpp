@@ -86,15 +86,22 @@ void CommandLineParser::printHelp()
     }
 }
 
-void CommandLineParser::_parseQHotProfile(QStringView profilePath)
+void CommandLineParser::_parseQHotProfile(const QString& profilePath)
 {
-    QFile file{QString{"%1/qhot-profile.json"}.arg(profilePath)};
+    QFileInfo fInfo{profilePath};
+    QString profileFileName = QStringLiteral("qhot-profile.json");
+    if (fInfo.fileName() != profileFileName) {
+        qWarning() << "Wrong profile:" << fInfo.fileName() << "it should be:" << profileFileName;
+        return;
+    }
+
+    QFile file{profilePath};
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Failed to open json file for reading.";
         return;
     }
 
-    QDir profileDir{profilePath.toString()};
+    QDir profileDir{fInfo.absolutePath()};
 
     auto jsonData = file.readAll();
     QJsonParseError error;
