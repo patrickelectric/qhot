@@ -103,3 +103,9 @@ It is also quite handy to add a shortcut in QtCreator to launch qhot. See
 - **F2** Toggles visibility: maximized, full screen, back to default
 - **F3** After changing window size, reset window to loaded component size
 - **Ctrl+Q** Quit application
+
+### Loading Test Data
+
+QHot has the same functionality as qmlscene to load dummy test data and it
+works exactly the same way:
+[load test data](https://doc.qt.io/qt-5/qtquick-qmlscene.html#loading-test-data).
