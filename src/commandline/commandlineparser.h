@@ -120,5 +120,9 @@ private:
             {"background", "Set the background color", "color"},
             [](const QString& color) { ProvidesSomething::self()->setBackground(color); },
         },
+        {
+            {"quick-controls-conf", "Set the path to qtquickcontrols2.conf", "path"},
+            [](const QString& path) { qputenv("QT_QUICK_CONTROLS_CONF", path.toLocal8Bit()); },
+        },
     };
 };

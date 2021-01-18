@@ -144,6 +144,12 @@ void CommandLineParser::_parseQHotProfile(QStringView profilePath)
     if (background.isString()) {
         ProvidesSomething::self()->setBackground(background.toString());
     }
+
+    auto controlsConfPath = jsonObject.value(QLatin1String { "quick-controls-conf" });
+    if (controlsConfPath.isString()) {
+        auto absPath = profileDir.absoluteFilePath(controlsConfPath.toString());
+        qputenv("QT_QUICK_CONTROLS_CONF", absPath.toLocal8Bit());
+    }
 }
 
 void CommandLineParser::_translate(const QString &translationFile)
