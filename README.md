@@ -99,9 +99,8 @@ It is also quite handy to add a shortcut in QtCreator to launch qhot. See
 
 ### Shortcuts
 
-- **F1** Launch popup to change background
+- **F1** Launch popup to change background and control sizing behaviour
 - **F2** Toggles visibility: maximized, full screen, back to default
-- **F3** After changing window size, reset window to loaded component size
 - **Ctrl+Q** Quit application
 
 ### Loading Test Data

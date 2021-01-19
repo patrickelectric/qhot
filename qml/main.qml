@@ -63,15 +63,6 @@ ApplicationWindow {
         }
     }
 
-    Shortcut {
-        context: "ApplicationShortcut"
-        sequence: "ALT+F3"
-        onActivated: {
-            stateContainer.state = ""
-            stateContainer.state = Qt.binding(() => loader.status === Loader.Ready ? "itemLoaded" : "")
-        }
-    }
-
     ColorDialog {
         id: colorDialog
         title: "Select background color"
@@ -99,6 +90,11 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignCenter
                     text: "background"
                     onClicked: colorDialog.open()
+                }
+                CheckBox {
+                    id: cbStretch
+                    text: "Stretch loaded item"
+                    checked: true
                 }
             }
         }
@@ -160,14 +156,31 @@ ApplicationWindow {
 
     Item {
         id: stateContainer
-        state: loader.status === Loader.Ready ? "itemLoaded" : ""
-        states: State {
-            name: "itemLoaded"
-            PropertyChanges {
-                target: window
-                width: loader.item.width
-                height: loader.item.height
+        state: {
+            if (cbStretch.checked) {
+                return loader.status === Loader.Ready ? "stretch" : ""
+            } else {
+                return loader.status === Loader.Ready ? "itemLoaded" : ""
             }
         }
+
+        states: [
+            State {
+                name: "itemLoaded"
+                PropertyChanges {
+                    target: window
+                    width: loader.item.width
+                    height: loader.item.height
+                }
+            }, State {
+                name: "stretch"
+                PropertyChanges {
+                    target: loader
+                    // anchors.fill parent doesn't reset these properties after reset
+                    width: parent.width
+                    height: parent.height
+                }
+            }
+        ]
     }
 }
