@@ -10,6 +10,7 @@
 #include <QQuickStyle>
 #include <QTranslator>
 
+#include "../providessomething.h"
 
 /**
  * @brief Deal with command lines
@@ -62,7 +63,7 @@ private:
     QList<std::function<void()>> _posAppFunctions;
 
     void printHelp();
-    void _parseQHotProfile(QStringView profilePath);
+    void _parseQHotProfile(const QString& profilePath);
     void _translate(const QString& translationFile);
 
     QStringList _importPaths;
@@ -112,8 +113,16 @@ private:
             [this](const QString& argument) { _translate(argument); },
         },
         {
-            {"profile-path", "Add path to qhot_profile.json file", "file"},
+            {"profile-path", "Path (including filename) to qhot-profile.json", "file"},
             [this](const QString& argument) { _parseQHotProfile(argument); },
+        },
+        {
+            {"background", "Set the background color", "color"},
+            [](const QString& color) { ProvidesSomething::self()->setBackground(color); },
+        },
+        {
+            {"quick-controls-conf", "Path (including filename) to qtquickcontrols2.conf", "file"},
+            [](const QString& path) { qputenv("QT_QUICK_CONTROLS_CONF", path.toLocal8Bit()); },
         },
     };
 };

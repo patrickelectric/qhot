@@ -6,13 +6,15 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 
+#include <utility>
+
 CommandLineParser::CommandLineParser(int argc, char *argv[])
     : QCommandLineParser()
 {
     setApplicationDescription("Hot reload for nested qml files.");
     addVersionOption();
 
-    for (const auto optionStruct : _optionsStruct) {
+    for (auto& optionStruct : std::as_const(_optionsStruct)) {
         addOption(optionStruct.option);
     }
 
@@ -22,7 +24,7 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
     }
     process(arguments);
 
-    for (const auto optionStruct : _optionsStruct) {
+    for (auto& optionStruct : std::as_const(_optionsStruct)) {
         if(!isSet(optionStruct.option)) {
             continue;
         }
@@ -32,17 +34,17 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
             QString result = value(optionStruct.option);
             if (!result.isEmpty()) {
                 qDebug().noquote() << QStringLiteral("%1 [%2]: %3")
-                                                .arg(optionStruct.option.names().first(),
+                                                .arg(optionStruct.option.names().constFirst(),
                                                     optionStruct.option.description(), result);
                 optionStruct.function(result);
             } else {
                 qDebug().noquote() << QStringLiteral("%1 [%2]: %3")
-                                                .arg(optionStruct.option.names().first(),
+                                                .arg(optionStruct.option.names().constFirst(),
                                                     optionStruct.option.description(), "No valid parameter.");
             }
         } else {
             qDebug().noquote() << QStringLiteral("%1 [%2]: ON")
-                                              .arg(optionStruct.option.names().first(),
+                                              .arg(optionStruct.option.names().constFirst(),
                                                   optionStruct.option.description());
             optionStruct.function({});
         }
@@ -51,18 +53,18 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
 
 void CommandLineParser::setEngine(QQmlEngine* engine)
 {
-    for (const auto path : _importPaths) {
+    for (auto& path : std::as_const(_importPaths)) {
         engine->addImportPath(path);
     }
 
-    for (const auto path : _pluginPaths) {
+    for (auto& path : std::as_const(_pluginPaths)) {
         engine->addPluginPath(path);
     }
 }
 
 void CommandLineParser::printHelp()
 {
-    for (const auto& optionStruct : _optionsStruct) {
+    for (auto& optionStruct : std::as_const(_optionsStruct)) {
         auto names = optionStruct.option.names();
         for(auto& name: names) {
             name.prepend(name.length() > 1 ? "--" : "-");
@@ -74,15 +76,22 @@ void CommandLineParser::printHelp()
     }
 }
 
-void CommandLineParser::_parseQHotProfile(QStringView profilePath)
+void CommandLineParser::_parseQHotProfile(const QString& profilePath)
 {
-    QFile file{QString{"%1/qhot-profile.json"}.arg(profilePath)};
+    QFileInfo fInfo{profilePath};
+    QString profileFileName = QStringLiteral("qhot-profile.json");
+    if (fInfo.fileName() != profileFileName) {
+        qWarning() << "Wrong profile:" << fInfo.fileName() << "it should be:" << profileFileName;
+        return;
+    }
+
+    QFile file{profilePath};
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Failed to open json file for reading.";
         return;
     }
 
-    QDir profileDir{profilePath.toString()};
+    QDir profileDir{fInfo.absolutePath()};
 
     auto jsonData = file.readAll();
     QJsonParseError error;
@@ -138,6 +147,17 @@ void CommandLineParser::_parseQHotProfile(QStringView profilePath)
     auto translationFile = jsonObject.value(QLatin1String{"translation"});
     if (translationFile.isString()) {
         _translate(translationFile.toString());
+    }
+
+    auto background = jsonObject.value(QLatin1String{"background"});
+    if (background.isString()) {
+        ProvidesSomething::self()->setBackground(background.toString());
+    }
+
+    auto controlsConfPath = jsonObject.value(QLatin1String { "quick-controls-conf" });
+    if (controlsConfPath.isString()) {
+        auto absPath = profileDir.absoluteFilePath(controlsConfPath.toString());
+        qputenv("QT_QUICK_CONTROLS_CONF", absPath.toLocal8Bit());
     }
 }
 
