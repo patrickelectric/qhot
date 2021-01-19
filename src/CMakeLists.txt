@@ -13,6 +13,8 @@ add_executable(qhot
     ${RESOURCES}
 )
 
+set_property(TARGET qhot PROPERTY CXX_STANDARD 17)
+
 target_include_directories(qhot
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/commandline
