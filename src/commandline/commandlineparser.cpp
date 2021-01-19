@@ -6,6 +6,8 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 
+#include <utility>
+
 CommandLineParser::CommandLineParser(int argc, char *argv[])
     : QCommandLineParser()
 {
