@@ -39,7 +39,7 @@ ApplicationWindow {
         anchors.margins: 5
         text: "Clicke here!\n Or add item as argument.\n" + error
         onClicked: fileDialog.visible = true
-
+        visible: loader.status === Loader.Null
     }
 
     Connections {
@@ -50,18 +50,23 @@ ApplicationWindow {
         }
     }
 
-    Loader {
-        id: loader
-        focus: true
+    Rectangle {
         anchors.fill: parent
+        color: ProvidesSomething.background
+        visible: !button.visible
 
-        onStatusChanged: {
-            if(loader.status === Loader.Error || loader.status === Loader.Null) {
-                button.visible = true
-                button.error = "Failed to load."
-            } else {
-                button.visible = false
-                button.error = ""
+        Loader {
+            id: loader
+            focus: true
+            anchors.fill: parent
+            onStatusChanged: {
+                if(loader.status === Loader.Error || loader.status === Loader.Null) {
+                    button.visible = true
+                    button.error = "Failed to load."
+                } else {
+                    button.visible = false
+                    button.error = ""
+                }
             }
         }
     }
