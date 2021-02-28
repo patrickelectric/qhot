@@ -51,6 +51,16 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
     }
 };
 
+void CommandLineParser::setApplication(QCoreApplication* application)
+{
+    Q_UNUSED(application)
+    QCoreApplication::installTranslator(&_translator);
+
+    for(const auto& function : std::as_const(_posAppFunctions)) {
+        function();
+    }
+}
+
 void CommandLineParser::setEngine(QQmlEngine* engine)
 {
     for (auto& path : std::as_const(_importPaths)) {

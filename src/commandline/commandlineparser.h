@@ -43,15 +43,7 @@ public:
      *
      * @param application
      */
-    void setApplication(QCoreApplication* application)
-    {
-        Q_UNUSED(application)
-        QCoreApplication::installTranslator(&_translator);
-
-        for(auto function : _posAppFunctions) {
-            function();
-        }
-    }
+    void setApplication(QCoreApplication* application);
 
 private:
     struct OptionStruct {
