@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QColor>
 #include <QFileSystemWatcher>
 #include <QQmlComponent>
 #include <QObject>
@@ -16,6 +17,9 @@ class QQmlEngine;
 class ProvidesSomething : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QUrl filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
+    Q_PROPERTY(QColor background READ background WRITE setBackground NOTIFY backgroundChanged)
+
 public:
     /**
      * @brief Return ProvidesSomething pointer
@@ -52,7 +56,6 @@ public:
         _fileSystemWatcher.addPath(url.toLocalFile());
         emit filePathChanged();
     }
-    Q_PROPERTY(QUrl filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
 
     /**
      * @brief Set the qml engine
@@ -61,8 +64,17 @@ public:
      */
     void setEngine(QQmlEngine* engine);
 
+    QColor background() const { return _background; }
+    void setBackground(const QColor& color) {
+        if (color != _background) {
+            _background = color;
+            emit backgroundChanged();
+        }
+    }
+
 signals:
     void filePathChanged();
+    void backgroundChanged();
 
 private:
     Q_DISABLE_COPY(ProvidesSomething);
@@ -82,4 +94,5 @@ private:
     QFileSystemWatcher _fileSystemWatcher;
     QUrl _url;
     QQmlEngine* m_engine;
+    QColor _background{"white"};
 };
