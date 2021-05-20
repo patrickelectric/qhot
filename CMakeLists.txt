@@ -6,7 +6,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Qt5 REQUIRED
+option(QHOT_USE_QT6 "Use Qt6" OFF)
+
+if(QHOT_USE_QT6)
+    set(QT_VERSION Qt6)
+else()
+    set(QT_VERSION Qt5)
+endif()
+
+find_package(${QT_VERSION} REQUIRED
     Core
     Gui
     Qml
