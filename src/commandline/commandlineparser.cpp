@@ -5,6 +5,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
+#include <QtQml/QQmlContext>
 
 #include <utility>
 
@@ -69,6 +70,30 @@ void CommandLineParser::setEngine(QQmlEngine* engine)
 
     for (auto& path : std::as_const(_pluginPaths)) {
         engine->addPluginPath(path);
+    }
+}
+
+void CommandLineParser::loadDummyData(QQmlEngine *engine)
+{
+    const QFileInfo file = ProvidesSomething::self()->filePath().toLocalFile();
+    const QString pathToQml = file.canonicalPath();
+
+    const QDir dir(pathToQml + "/dummydata/", "*.qml");
+    QStringList list = dir.entryList();
+    for (QString qmlFile: list) {
+        QQmlComponent comp(engine, dir.filePath(qmlFile));
+        QObject *dummyData = comp.create();
+
+        if (comp.isError()) {
+            continue;
+        }
+
+        if (dummyData) {
+            fprintf(stderr, "Loaded dummy data: %s\n", qPrintable(dir.filePath(qmlFile)));
+            qmlFile.truncate(qmlFile.length()-4);
+            engine->rootContext()->setContextProperty(qmlFile, dummyData);
+            dummyData->setParent(engine);
+        }
     }
 }
 
