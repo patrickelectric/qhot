@@ -1,0 +1,35 @@
+name: Releases
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+
+env:
+  SOURCE_DIR:   ${{ github.workspace }}
+  BUILD_TYPE:   ${{ fromJSON('["DailyBuild", "StableBuild"]')[ github.ref_type == 'tag' || contains(github.ref, 'Stable_' ) ] }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: 6.4.2
+          host: linux
+          target: desktop
+          dir: ${{ runner.temp }}
+          modules: qtcharts
+          setup-python: true
+
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel --config Release
