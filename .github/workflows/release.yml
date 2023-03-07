@@ -33,3 +33,21 @@ jobs:
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --parallel --config Release
+
+      - name: Install LinuxDeploy
+        uses: miurahr/install-linuxdeploy-action@v1
+        with:
+          plugins: qt appimage
+
+      - name: Create Appimage
+        run: |
+          # Install lib for linuxdeploy
+          sudo apt install --yes libfuse2 libxkbcommon-x11-0
+          export QML_SOURCES_PATHS=$PWD/qml
+          linuxdeploy-x86_64.AppImage --desktop-file=deploy/qhot.desktop --executable=build/src/qhot --appdir=build/src --plugin=qt --output=appimage --verbosity=3 --icon-file=deploy/icon.png
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux
+          path: qhot-*.AppImage
