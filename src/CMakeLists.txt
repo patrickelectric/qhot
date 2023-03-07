@@ -3,7 +3,7 @@ set(CMAKE_AUTOMOC ON)
 # Automatically link Qt executables to qtmain target on Windows
 cmake_policy(SET CMP0020 NEW)
 
-qt5_add_resources(RESOURCES ../resources.qrc)
+qt6_add_resources(RESOURCES ../resources.qrc)
 
 add_executable(qhot
     main.cpp
@@ -21,13 +21,13 @@ target_include_directories(qhot
 )
 
 target_link_libraries(qhot
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Qml
-    Qt5::QuickControls2
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::QuickControls2
 )
 
-get_target_property(QT_MOC_EXECUTABLE Qt5::moc LOCATION)
+get_target_property(QT_MOC_EXECUTABLE Qt6::moc LOCATION)
 get_filename_component(QT_INSTALL_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
 if (EXISTS ${QT_INSTALL_PREFIX})
     install(
