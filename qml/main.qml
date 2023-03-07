@@ -1,16 +1,15 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.3
-import QtQuick.Controls.Material 2.1
-import QtQuick.Dialogs 1.3
-import QtQuick.Layouts 1.3
+import QtCore
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtQuick.Dialogs
+import QtQuick.Layouts
 
-import QtCharts 2.3
+import QtCharts
 
-import QtGraphicalEffects 1.0
+import QtQml.Models
 
-import QtQml.Models 2.2
-
-import ProvidesSomething 1.0
+import ProvidesSomething
 
 ApplicationWindow {
     id: window
@@ -36,18 +35,16 @@ ApplicationWindow {
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
-        folder: shortcuts.home
+        currentFolder: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
         onAccepted: {
-            print("File selected:", fileDialog.fileUrl)
-            loader.source = fileDialog.fileUrl
+            print("File selected:", selectedFile)
+            loader.source = selectedFile
         }
     }
 
     ColorDialog {
         id: colorDialog
         title: "Select background color"
-        currentColor: loaderBackground.color
-        color: ProvidesSomething.background
         onAccepted: popup.close()
     }
 
@@ -97,13 +94,13 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: 5
         text: "Clicke here!\n Or add item as argument.\n" + error
-        onClicked: fileDialog.visible = true
         visible: loader.status === Loader.Null
+        onClicked: fileDialog.visible = true
     }
 
     Connections {
         target: ProvidesSomething
-        onFilePathChanged: {
+        function onFilePathChanged() {
             var path = ProvidesSomething.filePath + "?t=" + Date.now()
             loader.source = path
         }
@@ -112,7 +109,7 @@ ApplicationWindow {
     Rectangle {
         id: loaderBackground
         anchors.fill: parent
-        color: colorDialog.color
+        color: colorDialog.selectedColor
         visible: !button.visible
 
         Loader {
