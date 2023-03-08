@@ -5,10 +5,6 @@ on:
   pull_request:
   push:
 
-env:
-  SOURCE_DIR:   ${{ github.workspace }}
-  BUILD_TYPE:   ${{ fromJSON('["DailyBuild", "StableBuild"]')[ github.ref_type == 'tag' || contains(github.ref, 'Stable_' ) ] }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
