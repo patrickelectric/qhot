@@ -7,7 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+        - os: ubuntu-latest
+          DEPLOY_PATH: qhot-*.AppImage
+        - os: windows-latest
+          DEPLOY_PATH: qhot-*.zip
 
     steps:
       - name: Checkout repo
@@ -32,18 +39,37 @@ jobs:
 
       - name: Install LinuxDeploy
         uses: miurahr/install-linuxdeploy-action@v1
+        if: runner.os == 'Linux'
         with:
           plugins: qt appimage
 
       - name: Create Appimage
+        if: runner.os == 'Linux'
         run: |
           # Install lib for linuxdeploy
           sudo apt install --yes libfuse2 libxkbcommon-x11-0
           export QML_SOURCES_PATHS=$PWD/qml
           linuxdeploy-x86_64.AppImage --desktop-file=deploy/qhot.desktop --executable=build/src/qhot --appdir=build/src --plugin=qt --output=appimage --verbosity=3 --icon-file=deploy/icon.png
 
-      - name: Upload AppImage
+      - name: Build Windows
+        if: runner.os == 'Windows'
+        env:
+          OPENSSL: 'C:\Program Files\OpenSSL\bin'
+          SYSTEM32: 'C:\windows\system32'
+          SYSTEM32_DLLS: 'VCRUNTIME140.dll VCRUNTIME140_1.dll MSVCP140.dll MSVCP140_1.dll'
+        run: |
+          mkdir output
+          cp build/Release/pingviewer.exe output/pingviewer.exe
+          if (($env:OPENSSL) -and (Test-Path $env:OPENSSL -pathType container)) {
+            Copy-Item ${env:OPENSSL}\*.dll -Destination output -Force
+          }
+          foreach ($I in (${env:SYSTEM32_DLLS} -split ' ')) { copy ${env:SYSTEM32}\$I output\ }
+          windeployqt --qmldir qml --release output/pingviewer.exe --verbose=2
+          ls
+          ls output
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: linux
-          path: qhot-*.AppImage
+          name: qhot-${{ runner.os }}
+          path: ${{ matrix.DEPLOY_PATH }}
