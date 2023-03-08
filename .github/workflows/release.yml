@@ -11,6 +11,8 @@ jobs:
     strategy:
       matrix:
         include:
+        - os: macos-latest
+          DEPLOY_PATH: qhot-*.dmg
         - os: ubuntu-latest
           DEPLOY_PATH: qhot-*.AppImage
         - os: windows-latest
@@ -42,6 +44,13 @@ jobs:
         if: runner.os == 'Linux'
         with:
           plugins: qt appimage
+
+      - name: Create dmg
+        if: runner.os == 'macOS'
+        run: |
+          macdeployqt qhot.app/ -qmldir=../qml -dmg
+          ls
+          ls qhot.app
 
       - name: Create Appimage
         if: runner.os == 'Linux'
