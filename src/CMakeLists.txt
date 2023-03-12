@@ -1,7 +1,7 @@
-set(CMAKE_AUTOMOC ON)
-
 # Automatically link Qt executables to qtmain target on Windows
 cmake_policy(SET CMP0020 NEW)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 qt6_add_resources(RESOURCES ../resources.qrc)
 
@@ -27,7 +27,7 @@ target_link_libraries(qhot
     Qt6::QuickControls2
 )
 
-get_target_property(QT_MOC_EXECUTABLE Qt6::moc LOCATION)
+get_target_property(QT_MOC_EXECUTABLE Qt6::moc IMPORTED_LOCATION)
 get_filename_component(QT_INSTALL_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
 if (EXISTS ${QT_INSTALL_PREFIX})
     install(
@@ -37,3 +37,4 @@ if (EXISTS ${QT_INSTALL_PREFIX})
     )
 endif()
 
+set_target_properties(qhot PROPERTIES MACOSX_BUNDLE ON)

@@ -13,5 +13,6 @@ find_package(Qt6 REQUIRED
     Quick
     QuickControls2
 )
+qt_standard_project_setup()
 
 add_subdirectory(src)
