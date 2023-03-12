@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine appEngine(QUrl("qrc:/main.qml"));
     commandLineParser.setEngine(&appEngine);
 
-    appEngine.setUrlInterceptor(UrlInterceptor::self());
+    appEngine.addUrlInterceptor(UrlInterceptor::self());
     ProvidesSomething::self()->setEngine(&appEngine);
 
     if (commandLineParser.positionalArguments().size()) {
