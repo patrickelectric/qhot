@@ -85,14 +85,6 @@ private:
             [](const QString&) { QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL); },
         },
         {
-            {"scaling", "Enable High DPI scaling (AA_EnableHighDpiScaling)"},
-            [](const QString&) { QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling); },
-        },
-        {
-            {"no-scaling", "Disable High DPI scaling (AA_DisableHighDpiScaling)"},
-            [](const QString&) { QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling); },
-        },
-        {
             {{"import-path", "I"}, "Add list of **import** paths (path:path)", "paths"},
             [this](const QString& argument) { _importPaths = argument.split(':'); },
         },

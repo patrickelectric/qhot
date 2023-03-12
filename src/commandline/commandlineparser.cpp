@@ -134,10 +134,6 @@ void CommandLineParser::_parseQHotProfile(const QString& profilePath)
     if (software.toBool(), false)
         QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 
-    auto scaling = jsonObject.value(QLatin1String{"scaling"});
-    if (scaling.toBool(), false)
-        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     auto importPaths = jsonObject.value(QLatin1String{"import-path"});
     if (importPaths.isArray()) {
         const auto paths = importPaths.toArray();
