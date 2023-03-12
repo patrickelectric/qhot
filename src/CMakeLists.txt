@@ -25,7 +25,7 @@ target_link_libraries(qhot
     Qt6::QuickControls2
 )
 
-get_target_property(QT_MOC_EXECUTABLE Qt6::moc LOCATION)
+get_target_property(QT_MOC_EXECUTABLE Qt6::moc IMPORTED_LOCATION)
 get_filename_component(QT_INSTALL_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
 if (EXISTS ${QT_INSTALL_PREFIX})
     install(
