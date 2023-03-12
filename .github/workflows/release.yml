@@ -35,10 +35,19 @@ jobs:
           modules: qtcharts
           setup-python: true
 
-      - name: Build
+      - name: Configure
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        if: runner.os == 'macOS' || runner.os == 'Linux'
+        run: |
           cmake --build build --parallel --config Release
+
+      - name: Build
+        if: runner.os == 'Windows'
+        run: |
+          cmake --build build --parallel --target ALL_BUILD --config Release
 
       - name: Install LinuxDeploy
         uses: miurahr/install-linuxdeploy-action@v1
