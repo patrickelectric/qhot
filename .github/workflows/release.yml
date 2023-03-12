@@ -9,14 +9,15 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
         - os: macos-latest
-          DEPLOY_PATH: qhot-*.dmg
+          DEPLOY_PATH: qhot.dmg
         - os: ubuntu-latest
           DEPLOY_PATH: qhot-*.AppImage
         - os: windows-latest
-          DEPLOY_PATH: qhot-*.zip
+          DEPLOY_PATH: qhot-Windows.zip
 
     steps:
       - name: Checkout repo
@@ -28,16 +29,24 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: 6.4.2
-          host: linux
           target: desktop
           dir: ${{ runner.temp }}
           modules: qtcharts
           setup-python: true
 
-      - name: Build
+      - name: Configure
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build Unix
+        if: runner.os == 'macOS' || runner.os == 'Linux'
+        run: |
           cmake --build build --parallel --config Release
+
+      - name: Build Windows
+        if: runner.os == 'Windows'
+        run: |
+          cmake --build build --parallel --target ALL_BUILD --config Release
 
       - name: Install LinuxDeploy
         uses: miurahr/install-linuxdeploy-action@v1
@@ -48,9 +57,10 @@ jobs:
       - name: Create dmg
         if: runner.os == 'macOS'
         run: |
-          macdeployqt qhot.app/ -qmldir=../qml -dmg
-          ls
-          ls qhot.app
+          cd build/src
+          macdeployqt qhot.app -qmldir=../../qml -dmg
+          cd ../..
+          cp build/src/qhot.dmg .
 
       - name: Create Appimage
         if: runner.os == 'Linux'
@@ -68,14 +78,19 @@ jobs:
           SYSTEM32_DLLS: 'VCRUNTIME140.dll VCRUNTIME140_1.dll MSVCP140.dll MSVCP140_1.dll'
         run: |
           mkdir output
-          cp build/Release/pingviewer.exe output/pingviewer.exe
+          cp build/Release/qhot.exe output/qhot.exe
           if (($env:OPENSSL) -and (Test-Path $env:OPENSSL -pathType container)) {
             Copy-Item ${env:OPENSSL}\*.dll -Destination output -Force
           }
           foreach ($I in (${env:SYSTEM32_DLLS} -split ' ')) { copy ${env:SYSTEM32}\$I output\ }
-          windeployqt --qmldir qml --release output/pingviewer.exe --verbose=2
-          ls
-          ls output
+          windeployqt --qmldir qml --release output/qhot.exe --verbose=2
+
+      - name: Zip windows
+        uses: vimtor/action-zip@v1
+        if: runner.os == 'Windows'
+        with:
+          files: output
+          dest: ${{ matrix.DEPLOY_PATH }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
