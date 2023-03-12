@@ -8,9 +8,15 @@ Check the online version [qmlonline](http://qmlonline.kde.org/) (Now as an offic
 
 ### Downloads :package:
 
+- Qt6:
+  - :computer: [Windows](https://github.com/patrickelectric/qhot/releases/download/qt6-1.0.0/qhot-Windows.zip)
+  - :apple: [MacOS](https://github.com/patrickelectric/qhot/releases/download/qt6-1.0.0/qhot.dmg)
+  - :penguin: [Linux](https://github.com/patrickelectric/qhot/releases/download/qt6-1.0.0/qhot.AppImage)
+
 - Qt5:
   - :computer: [Windows](https://github.com/patrickelectric/qhot/releases/download/qt5-1.0.0/qhot_release.zip)
   - :apple: [MacOS](https://github.com/patrickelectric/qhot/releases/download/qt5-1.0.0/qhot.dmg)
+  - :penguin: [Linux](https://github.com/patrickelectric/qhot/releases/download/qt5-1.0.0/qhot.AppImage)
 
 ### Arch Linux :zap:
 
