@@ -15,7 +15,7 @@ jobs:
         - os: macos-latest
           DEPLOY_PATH: qhot.dmg
         - os: ubuntu-latest
-          DEPLOY_PATH: qhot-*.AppImage
+          DEPLOY_PATH: qhot.AppImage
         - os: windows-latest
           DEPLOY_PATH: qhot-Windows.zip
 
@@ -69,6 +69,7 @@ jobs:
           sudo apt install --yes libfuse2 libxkbcommon-x11-0
           export QML_SOURCES_PATHS=$PWD/qml
           linuxdeploy-x86_64.AppImage --desktop-file=deploy/qhot.desktop --executable=build/src/qhot --appdir=build/src --plugin=qt --output=appimage --verbosity=3 --icon-file=deploy/icon.png
+          cp qhot-*.AppImage qhot.AppImage
 
       - name: Build Windows
         if: runner.os == 'Windows'
@@ -97,3 +98,23 @@ jobs:
         with:
           name: qhot-${{ runner.os }}
           path: ${{ matrix.DEPLOY_PATH }}
+
+      - name: Upload continuous to release
+        uses: svenstaro/upload-release-action@v2
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.DEPLOY_PATH }}
+          tag: continuous
+          overwrite: true
+          prerelease: true
+
+      - name: Upload release
+        uses: svenstaro/upload-release-action@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.DEPLOY_PATH }}
+          tag: ${{ github.ref }}
+          overwrite: true
+          prerelease: true
