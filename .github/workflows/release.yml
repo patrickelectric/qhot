@@ -35,6 +35,10 @@ jobs:
           modules: qtcharts
           setup-python: true
 
+      - name: Setup tmate session
+        if: runner.os == 'Windows'
+        uses: mxschmitt/action-tmate@v3
+
       - name: Configure
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
