@@ -1,6 +1,8 @@
 # Automatically link Qt executables to qtmain target on Windows
 cmake_policy(SET CMP0020 NEW)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 qt6_add_resources(RESOURCES ../resources.qrc)
 
 add_executable(qhot
