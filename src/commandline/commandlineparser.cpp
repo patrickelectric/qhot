@@ -8,6 +8,8 @@
 
 #include <utility>
 
+#define MAX_RECURSIVE_SEARCH_DEPTH 3
+
 CommandLineParser::CommandLineParser(int argc, char *argv[])
     : QCommandLineParser()
 {
@@ -138,7 +140,16 @@ void CommandLineParser::_parseQHotProfile(const QString& profilePath)
     if (importPaths.isArray()) {
         const auto paths = importPaths.toArray();
         for (const auto &path : paths) {
-            _importPaths.append(profileDir.absoluteFilePath(path.toString()));
+            auto potentialPath = _lookupDirectory(path.toString(), qApp->applicationDirPath(), MAX_RECURSIVE_SEARCH_DEPTH);
+            if (!potentialPath.isEmpty()) {
+                _importPaths.append(potentialPath);
+                continue;
+            }
+            potentialPath = _lookupDirectory(path.toString(), profilePath, MAX_RECURSIVE_SEARCH_DEPTH);
+            if (!potentialPath.isEmpty()) {
+                _importPaths.append(potentialPath);
+                continue;
+            }
         }
     }
 
@@ -146,7 +157,16 @@ void CommandLineParser::_parseQHotProfile(const QString& profilePath)
     if (pluginPaths.isArray()) {
         const auto paths = pluginPaths.toArray();
         for (const auto &path : paths) {
-            _pluginPaths.append(profileDir.absoluteFilePath(path.toString()));
+            auto potentialPath = _lookupDirectory(path.toString(), qApp->applicationDirPath(), MAX_RECURSIVE_SEARCH_DEPTH);
+            if (!potentialPath.isEmpty()) {
+                _pluginPaths.append(potentialPath);
+                continue;
+            }
+            potentialPath = _lookupDirectory(path.toString(), profilePath, MAX_RECURSIVE_SEARCH_DEPTH);
+            if (!potentialPath.isEmpty()) {
+                _pluginPaths.append(potentialPath);
+                continue;
+            }
         }
     }
 
@@ -187,4 +207,18 @@ void CommandLineParser::_translate(const QString &translationFile)
     qDebug() << _translator.translate(nullptr, "car");
 #endif
 
+}
+
+QString CommandLineParser::_lookupDirectory(const QString &needle, const QString &parentDirPath, int maximumDepth)
+{
+    QDir parentDir(parentDirPath);
+    QString parentPrefix = QStringLiteral("");
+    for (int i = 0; i < maximumDepth; i++) {
+        auto relativeToBinaryPath = parentDir.absoluteFilePath(parentPrefix + needle);
+        if (QDir(relativeToBinaryPath).exists()) {
+            return relativeToBinaryPath;
+        }
+        parentPrefix += QStringLiteral("../");
+    }
+    return {};
 }

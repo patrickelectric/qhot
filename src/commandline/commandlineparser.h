@@ -59,6 +59,7 @@ private:
     void printHelp();
     void _parseQHotProfile(const QString& profilePath);
     void _translate(const QString& translationFile);
+    static QString _lookupDirectory(const QString& needle, const QString& parentDirPath, int maximumDepth = 1);
 
     QStringList _importPaths;
     QStringList _pluginPaths;
