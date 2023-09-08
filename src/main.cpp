@@ -12,11 +12,11 @@ int main(int argc, char *argv[])
 {
     qmlRegisterSingletonType<ProvidesSomething>("ProvidesSomething", 1, 0, "ProvidesSomething", ProvidesSomething::qmlSingletonRegister);
 
-    CommandLineParser commandLineParser(argc, argv);
 
     QGuiApplication app(argc, argv);
     app.setOrganizationDomain("patrickelectric.work");
     app.setOrganizationName("patrickelectric");
+    CommandLineParser commandLineParser(argc, argv);
     commandLineParser.setApplication(&app);
 
     QQmlApplicationEngine appEngine;

@@ -13,7 +13,7 @@ import ProvidesSomething
 
 ApplicationWindow {
     id: window
-    title: "QHot"
+    title: Qt.application.name
     visible: true
 
     Shortcut {

@@ -165,6 +165,14 @@ void CommandLineParser::_parseQHotProfile(const QString& profilePath)
         auto absPath = profileDir.absoluteFilePath(controlsConfPath.toString());
         qputenv("QT_QUICK_CONTROLS_CONF", absPath.toLocal8Bit());
     }
+
+    auto appName = jsonObject.value(QLatin1String { "app-name" });
+    if (appName.isString()) {
+        _posAppFunctions.append(
+            [appName]{
+                qApp->setApplicationName(APPNAME_FORMAT.arg(appName.toString()));
+        });
+    }
 }
 
 void CommandLineParser::_translate(const QString &translationFile)
