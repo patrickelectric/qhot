@@ -19,8 +19,9 @@ int main(int argc, char *argv[])
     app.setOrganizationName("patrickelectric");
     commandLineParser.setApplication(&app);
 
-    QQmlApplicationEngine appEngine(QUrl("qrc:/main.qml"));
+    QQmlApplicationEngine appEngine;
     commandLineParser.setEngine(&appEngine);
+    appEngine.load(QUrl("qrc:/main.qml"));
 
     appEngine.addUrlInterceptor(UrlInterceptor::self());
     ProvidesSomething::self()->setEngine(&appEngine);
