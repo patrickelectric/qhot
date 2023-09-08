@@ -12,6 +12,8 @@
 
 #include "../providessomething.h"
 
+#define APPNAME_FORMAT QStringLiteral("qhot (%1)")
+
 /**
  * @brief Deal with command lines
  *
@@ -107,6 +109,10 @@ private:
         {
             {"quick-controls-conf", "Path (including filename) to qtquickcontrols2.conf", "file"},
             [](const QString& path) { qputenv("QT_QUICK_CONTROLS_CONF", path.toLocal8Bit()); },
+        },
+        {
+            {"app-name", "Name of the application to set in QGuiApplication::setApplicationName", "name"},
+            [this](const QString& argument) { _posAppFunctions.append([argument]{ qApp->setApplicationName(APPNAME_FORMAT.arg(argument)); });},
         },
     };
 };

@@ -65,6 +65,7 @@ To run qhot:
 --profile-path           Path (including filename) to qhot-profile.json (file)
 --background             Set the background color (color)
 --quick-controls-conf    Path (including filename) to qtquickcontrols2.conf (file)
+--app-name               Name of the application running inside qhot (name)
 ```
 
 ### Store options in a profile
