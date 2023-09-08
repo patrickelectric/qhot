@@ -123,6 +123,13 @@ ApplicationWindow {
                 } else {
                     button.visible = false
                     button.error = ""
+                    // resize the window to fit the contents if it's larger and gives us implicit size
+                    if (item) {
+                        if (item.implicitWidth !== "undefined" && item.implicitWidth > window.width)
+                            window.width = Math.min(item.implicitWidth, Screen.width)
+                        if (item.implicitHeight !== "undefined" && item.implicitHeight > window.height)
+                            window.height = Math.min(item.implicitHeight, Screen.height)
+                    }
                 }
             }
         }
