@@ -2,7 +2,7 @@
 
 Live preview of your qml modifications. It works with nested qml components !
 
-Check the online version [qmlonline](http://qmlonline.kde.org/) (Now as an official KDE project) !
+Check the online version [qmlonline](https://patrickelectric.work/qmlonline/) (Now as an official KDE project) !
 
 ## Install
 
