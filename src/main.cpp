@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
             ProvidesSomething::self()->setFilePath(QUrl::fromUserInput(dir.absolutePath()));
         }
     }
+    commandLineParser.loadDummyData(&appEngine);
 
     return app.exec();
 }
