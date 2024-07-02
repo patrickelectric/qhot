@@ -12,6 +12,7 @@ find_package(Qt6 REQUIRED
     Qml
     Quick
     QuickControls2
+    Widgets
 )
 qt_standard_project_setup()
 
