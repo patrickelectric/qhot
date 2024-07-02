@@ -25,6 +25,7 @@ target_link_libraries(qhot
     Qt6::Gui
     Qt6::Qml
     Qt6::QuickControls2
+    Qt6::Widgets
 )
 
 get_target_property(QT_MOC_EXECUTABLE Qt6::moc IMPORTED_LOCATION)
