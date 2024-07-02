@@ -2,10 +2,10 @@
 #include "providessomething.h"
 #include "urlinterceptor.h"
 
+#include <QApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 
 int main(int argc, char *argv[])
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType<ProvidesSomething>("ProvidesSomething", 1, 0, "ProvidesSomething", ProvidesSomething::qmlSingletonRegister);
 
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     app.setOrganizationDomain("patrickelectric.work");
     app.setOrganizationName("patrickelectric");
     CommandLineParser commandLineParser(argc, argv);
