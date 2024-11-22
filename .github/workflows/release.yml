@@ -12,10 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - os: macos-latest
-          DEPLOY_PATH: qhot-x86.dmg
         - os: macos-13
-          DEPLOY_PATH: qhot-AS.dmg
+          DEPLOY_PATH: qhot.dmg
         - os: ubuntu-latest
           DEPLOY_PATH: qhot.AppImage
         - os: windows-latest
