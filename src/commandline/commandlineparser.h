@@ -48,6 +48,8 @@ public:
      */
     void setApplication(QCoreApplication* application);
 
+    void loadDummyData(QQmlEngine *engine);
+
 private:
     struct OptionStruct {
         QCommandLineOption option;
